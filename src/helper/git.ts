@@ -9,7 +9,10 @@ export const execGitCommand = async (args: string[]) : Promise<IGitResult> => {
   let res
   try {
     const currentGitFolder = (await logseq.App.getCurrentGraph())?.path
-    const runArgs = currentGitFolder ? ['-C', currentGitFolder, ...args] : args
+
+    const realGitFolder = currentGitFolder?.split("/").slice(0, -1).join("/");
+    const runArgs = realGitFolder ? ['-C', realGitFolder, ...args] : args
+
     _inProgress = logseq.Git.execCommand(runArgs)
     res = await _inProgress
   } finally {
